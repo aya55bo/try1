@@ -6,6 +6,7 @@ use App\Http\Controllers\AlphabetController;
 use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\FormeController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\AnimalController;
 
 Route::get('/', function () {
     return view('welcome');
