@@ -1,238 +1,198 @@
-@extends('components.layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Quiz des chiffres') }}
+        </h2>
+    </x-slot>
 
-@section('title', 'Quiz des chiffres')
-
-@section('styles')
-<style>
-    .quiz-container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    .quiz-card {
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        padding: 30px;
-        margin-bottom: 30px;
-    }
-    .question {
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-    }
-    .chiffre-display {
-        font-size: 5rem;
-        font-weight: bold;
-        color: #007bff;
-        text-align: center;
-        margin: 20px 0;
-    }
-    .options {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        margin-top: 20px;
-    }
-    .option-btn {
-        padding: 15px;
-        font-size: 1.2rem;
-        border: 2px solid #dee2e6;
-        border-radius: 10px;
-        background-color: #f8f9fa;
-        transition: all 0.3s;
-    }
-    .option-btn:hover {
-        background-color: #e9ecef;
-    }
-    .option-btn.correct {
-        background-color: #d4edda;
-        border-color: #c3e6cb;
-        color: #155724;
-    }
-    .option-btn.incorrect {
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-        color: #721c24;
-    }
-    .feedback {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 10px;
-        text-align: center;
-        font-size: 1.2rem;
-        display: none;
-    }
-    .feedback.correct {
-        background-color: #d4edda;
-        color: #155724;
-    }
-    .feedback.incorrect {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-    .progress-container {
-        margin-bottom: 20px;
-    }
-    .results {
-        text-align: center;
-        padding: 20px;
-        display: none;
-    }
-    .score {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-</style>
-@endsection
-
-@section('content')
-    <h2 class="text-center mb-4">Quiz des chiffres</h2>
-    
-    <!-- Élément caché contenant les données des chiffres -->
-    <div id="chiffres" data-chiffres='@json($chiffres)' style="display: none;"></div>
-    
-    <div class="quiz-container">
-        <div class="progress-container">
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progress-bar">0%</div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <h1 class="text-2xl mb-6 text-center">Trouvez le bon chiffre !</h1>
+                    
+                    <div id="quiz-container">
+                        <div class="mb-8 text-center">
+                            <div id="score" class="text-lg font-bold mb-4">Score: 0</div>
+                            <div id="question" class="text-xl mb-2">Quel est ce chiffre ?</div>
+                            <div id="current-number" class="text-6xl font-bold mb-6">?</div>
+                            
+                            <div id="options" class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-lg mx-auto">
+                                <!-- Les options seront générées en JS -->
+                            </div>
+                            
+                            <div id="feedback" class="mt-6 text-2xl font-bold hidden"></div>
+                            
+                            <button id="next-btn" class="mt-8 bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg hidden">
+                                Question suivante
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="final-score" class="text-center hidden">
+                        <h2 class="text-2xl mb-4">Quiz terminé !</h2>
+                        <p class="text-xl mb-6">Votre score final est : <span id="final-score-value">0</span>/5</p>
+                        <button id="restart-btn" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg">
+                            Recommencer le quiz
+                        </button>
+                        <a href="{{ route('chiffres.index') }}" class="inline-block mt-4 bg-gray-500 hover:bg-gray-600 text-white py-2 px-6 rounded-lg">
+                            Retour aux chiffres
+                        </a>
+                    </div>
+                    
+                    <audio id="correct-sound" src="{{ asset('sons/correct.mp3') }}"></audio>
+                    <audio id="wrong-sound" src="{{ asset('sons/wrong.mp3') }}"></audio>
+                </div>
             </div>
         </div>
-        
-        <div class="quiz-card" id="quiz-card">
-            <div class="question" id="question"></div>
-            <div class="chiffre-display" id="chiffre-display"></div>
-            <div class="options" id="options-container"></div>
-            <div class="feedback" id="feedback"></div>
-            <button class="btn btn-primary mt-3 d-none" id="next-question">Question suivante</button>
-        </div>
-        
-        <div class="results" id="results">
-            <div class="score" id="score"></div>
-            <button class="btn btn-primary" id="restart-quiz">Recommencer le quiz</button>
-        </div>
     </div>
-@endsection
-
-@section('scripts')
-<script>
-    $(document).ready(function() {
-        // Données des chiffres - Correction pour récupérer correctement les données JSON
-        const allChiffres = JSON.parse(document.getElementById('chiffres').getAttribute('data-chiffres'));
-        let chiffres = [...allChiffres]; // Copie pour pouvoir modifier
-        let currentQuestionIndex = 0;
-        let correctAnswers = 0;
-        let totalQuestions = 5;
-        
-        // Mélanger les chiffres
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chiffres = [
+                { valeur: 0, nom: 'Zéro' },
+                { valeur: 1, nom: 'Un' },
+                { valeur: 2, nom: 'Deux' },
+                { valeur: 3, nom: 'Trois' },
+                { valeur: 4, nom: 'Quatre' },
+                { valeur: 5, nom: 'Cinq' },
+                { valeur: 6, nom: 'Six' },
+                { valeur: 7, nom: 'Sept' },
+                { valeur: 8, nom: 'Huit' },
+                { valeur: 9, nom: 'Neuf' },
+                { valeur: 10, nom: 'Dix' },
+                { valeur: 11, nom: 'Onze' },
+                { valeur: 12, nom: 'Douze' },
+                { valeur: 13, nom: 'Treize' },
+                { valeur: 14, nom: 'Quatorze' },
+                { valeur: 15, nom: 'Quinze' },
+                { valeur: 16, nom: 'seize' },
+                { valeur: 17, nom: 'Dix-sept' },
+                { valeur: 18, nom: 'Dix-huit' },
+                { valeur: 19, nom: 'Dix-Neuf' },
+                { valeur: 20, nom: 'Vingt' }
+            ];
+            
+            let currentQuestion = 0;
+            let score = 0;
+            let questions = [];
+            
+            // Générer 5 questions aléatoires
+            function generateQuestions() {
+                // Mélanger le tableau des chiffres
+                const shuffled = [...chiffres].sort(() => 0.5 - Math.random());
+                
+                // Prendre les 5 premiers
+                questions = shuffled.slice(0, 5);
+                
+                currentQuestion = 0;
+                score = 0;
+                document.getElementById('score').textContent = `Score: ${score}`;
+                showQuestion();
             }
-            return array;
-        }
-        
-        // Générer des options pour chaque question
-        function generateOptions(correctChiffre) {
-            let options = [correctChiffre];
-            let availableChiffres = allChiffres.filter(c => c.id !== correctChiffre.id);
-            shuffleArray(availableChiffres);
             
-            // Ajouter 3 options incorrectes
-            for (let i = 0; i < 3 && i < availableChiffres.length; i++) {
-                options.push(availableChiffres[i]);
+            function showQuestion() {
+                const questionObj = questions[currentQuestion];
+                const optionsDiv = document.getElementById('options');
+                
+                // Effacer le contenu précédent
+                optionsDiv.innerHTML = '';
+                
+                // Générer des options
+                let options = generateOptions(questionObj.valeur);
+                
+                // Afficher la question
+                document.getElementById('current-number').textContent = questionObj.nom;
+                
+                // Créer les boutons d'options
+                options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'bg-gray-200 hover:bg-gray-300 py-3 px-4 rounded text-2xl font-bold';
+                    button.textContent = option;
+                    button.addEventListener('click', () => checkAnswer(option, questionObj.valeur));
+                    optionsDiv.appendChild(button);
+                });
+                
+                // Cacher le bouton suivant et le feedback
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('feedback').classList.add('hidden');
             }
             
-            return shuffleArray(options);
-        }
-        
-        // Afficher une question
-        function showQuestion() {
-            if (currentQuestionIndex >= chiffres.length) {
-                showResults();
-                return;
+            function generateOptions(correctAnswer) {
+                let options = [correctAnswer];
+                
+                // Générer 3 options différentes
+                while (options.length < 4) {
+                    const rnd = Math.floor(Math.random() * 11); // 0 à 10
+                    if (!options.includes(rnd)) {
+                        options.push(rnd);
+                    }
+                }
+                
+                // Mélanger les options
+                return options.sort(() => 0.5 - Math.random());
             }
             
-            const currentChiffre = chiffres[currentQuestionIndex];
-            const options = generateOptions(currentChiffre);
+            function checkAnswer(selectedAnswer, correctAnswer) {
+                const feedbackDiv = document.getElementById('feedback');
+                const nextBtn = document.getElementById('next-btn');
+                const isCorrect = parseInt(selectedAnswer) === correctAnswer;
+                
+                // Désactiver tous les boutons
+                const buttons = document.querySelectorAll('#options button');
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    
+                    // Mettre en évidence la bonne réponse et la mauvaise
+                    if (parseInt(button.textContent) === correctAnswer) {
+                        button.className = 'bg-green-500 text-white py-3 px-4 rounded text-2xl font-bold';
+                    } else if (button.textContent === selectedAnswer.toString()) {
+                        button.className = 'bg-red-500 text-white py-3 px-4 rounded text-2xl font-bold';
+                    }
+                });
+                
+                // Afficher le feedback
+                feedbackDiv.textContent = isCorrect ? 'Bravo ! 🎉' : 'Essaie encore ! 😢';
+                feedbackDiv.className = `mt-6 text-2xl font-bold ${isCorrect ? 'text-green-500' : 'text-red-500'}`;
+                feedbackDiv.classList.remove('hidden');
+                
+                // Jouer le son
+                const audio = document.getElementById(isCorrect ? 'correct-sound' : 'wrong-sound');
+                audio.play();
+                
+                // Mettre à jour le score
+                if (isCorrect) {
+                    score++;
+                    document.getElementById('score').textContent = `Score: ${score}`;
+                }
+                
+                // Afficher le bouton suivant
+                nextBtn.classList.remove('hidden');
+            }
             
-            // Mise à jour de l'UI
-            $('#question').text(`Quel est ce chiffre ?`);
-            $('#chiffre-display').text(currentChiffre.valeur);
+            function nextQuestion() {
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                } else {
+                    // Quiz terminé
+                    document.getElementById('quiz-container').classList.add('hidden');
+                    document.getElementById('final-score').classList.remove('hidden');
+                    document.getElementById('final-score-value').textContent = score;
+                }
+            }
             
-            // Créer les boutons d'options
-            const optionsContainer = $('#options-container');
-            optionsContainer.empty();
-            
-            options.forEach(option => {
-                const button = $('<button>')
-                    .addClass('option-btn')
-                    .text(option.nom)
-                    .attr('data-id', option.id)
-                    .click(function() {
-                        checkAnswer(option.id, currentChiffre.id);
-                    });
-                optionsContainer.append(button);
+            // Configurer les événements
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+            document.getElementById('restart-btn').addEventListener('click', function() {
+                document.getElementById('quiz-container').classList.remove('hidden');
+                document.getElementById('final-score').classList.add('hidden');
+                generateQuestions();
             });
             
-            // Mise à jour de la progression
-            const progress = (currentQuestionIndex / totalQuestions) * 100;
-            $('#progress-bar').css('width', `${progress}%`).text(`${progress}%`);
-            
-            // Réinitialiser le feedback
-            $('#feedback').removeClass('correct incorrect').hide();
-            $('#next-question').addClass('d-none');
-        }
-        
-        // Vérifier la réponse
-        function checkAnswer(selectedId, correctId) {
-            // Désactiver les boutons
-            $('.option-btn').prop('disabled', true);
-            
-            const isCorrect = selectedId === correctId;
-            const feedback = $('#feedback');
-            
-            if (isCorrect) {
-                correctAnswers++;
-                feedback.text('Correct !').addClass('correct').removeClass('incorrect').show();
-                $(`.option-btn[data-id="${selectedId}"]`).addClass('correct');
-            } else {
-                feedback.text('Incorrect. La bonne réponse est : ' + 
-                    chiffres[currentQuestionIndex].nom).addClass('incorrect').removeClass('correct').show();
-                $(`.option-btn[data-id="${selectedId}"]`).addClass('incorrect');
-                $(`.option-btn[data-id="${correctId}"]`).addClass('correct');
-            }
-            
-            // Afficher le bouton suivant
-            $('#next-question').removeClass('d-none');
-        }
-        
-        // Passer à la question suivante
-        $('#next-question').click(function() {
-            currentQuestionIndex++;
-            showQuestion();
+            // Démarrer le quiz
+            generateQuestions();
         });
-        
-        // Afficher les résultats
-        function showResults() {
-            $('#quiz-card').hide();
-            $('#results').show();
-            $('#score').text(`Score: ${correctAnswers}/${totalQuestions}`);
-        }
-        
-        // Redémarrer le quiz
-        $('#restart-quiz').click(function() {
-            chiffres = shuffleArray([...allChiffres]).slice(0, totalQuestions);
-            currentQuestionIndex = 0;
-            correctAnswers = 0;
-            $('#quiz-card').show();
-            $('#results').hide();
-            showQuestion();
-        });
-        
-        // Initialisation
-        chiffres = shuffleArray([...allChiffres]).slice(0, totalQuestions);
-        showQuestion();
-    });
-</script>
-@endsection
+    </script>
+</x-app-layout>

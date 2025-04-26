@@ -17,5 +17,11 @@ class ChiffreController extends Controller
     {
         $chiffre = Chiffre::findOrFail($id);
         return view('chiffres.show', compact('chiffre'));
+    
     }
+    public function quiz()
+    {
+    return view('chiffres.quiz');
+    }
+    
 }
