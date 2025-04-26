@@ -50,3 +50,4 @@ Route::get('/formes', [FormeController::class, 'index'])->name('formes');
 
 Route::post('/toggle-theme', [ThemeController::class, 'toggle'])->name('theme.toggle');
 
+Route::get('/animals', [AnimalController::class, 'index'])->name('animals');
