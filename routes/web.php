@@ -7,8 +7,10 @@ use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\FormeController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\TransportController;
+use App\Http\Controllers\CouleurController;
 use App\Models\Transport;
 
+Route::get('/couleurs', [CouleurController::class, 'index'])->name('couleurs');
 Route::get('/transports', [TransportController::class, 'index'])->name('transports');
 
 

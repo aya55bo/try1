@@ -19,5 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TransportSeeder::class,
         ]);
+        $this->call([
+            CouleurSeeder::class,
+        ]);
     }
 }
