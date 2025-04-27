@@ -1,6 +1,6 @@
 <?php
 
-// app/Http/Controllers/ThemeController.php
+
 
 namespace App\Http\Controllers;
 

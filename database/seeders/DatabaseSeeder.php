@@ -17,5 +17,11 @@ class DatabaseSeeder extends Seeder
             PartieCorpsSeeder::class,
             AnimalSeeder::class,
         ]);
+        $this->call([
+            TransportSeeder::class,
+        ]);
+        $this->call([
+            CouleurSeeder::class,
+        ]);
     }
 }

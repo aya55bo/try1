@@ -6,7 +6,29 @@ use App\Http\Controllers\AlphabetController;
 use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\FormeController;
 use App\Http\Controllers\ThemeController;
+ ajout-animaux
 use App\Http\Controllers\AnimalController;
+
+use App\Http\Controllers\TransportController;
+use App\Http\Controllers\CouleurController;
+use App\Models\Transport;
+use App\Http\Controllers\DessinController;
+
+Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
+Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
+Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
+Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
+
+Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
+Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
+Route::post('/dessins/partager', [DessinController::class, 'partager'])->name('dessin.partager');
+
+Route::get('/couleurs', [CouleurController::class, 'index'])->name('couleurs');
+Route::get('/transports', [TransportController::class, 'index'])->name('transports');
+
+
+
+ main
 
 Route::get('/', function () {
     return view('welcome');
