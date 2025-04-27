@@ -16,5 +16,8 @@ class DatabaseSeeder extends Seeder
             AlphabetSeeder::class,
             PartieCorpsSeeder::class,
         ]);
+        $this->call([
+            TransportSeeder::class,
+        ]);
     }
 }
