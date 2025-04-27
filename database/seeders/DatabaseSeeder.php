@@ -15,9 +15,17 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AlphabetSeeder::class,
             PartieCorpsSeeder::class,
+
+            ChiffresSeeder::class,
+
+            AnimalSeeder::class,
         ]);
         $this->call([
             TransportSeeder::class,
+        ]);
+        $this->call([
+            CouleurSeeder::class,
+
         ]);
     }
 }
