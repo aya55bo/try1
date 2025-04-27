@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AlphabetSeeder::class,
             PartieCorpsSeeder::class,
+
+            ChiffresSeeder::class,
+
             AnimalSeeder::class,
         ]);
         $this->call([
@@ -22,6 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $this->call([
             CouleurSeeder::class,
+
         ]);
     }
 }

@@ -6,10 +6,14 @@ use App\Http\Controllers\AlphabetController;
 use App\Http\Controllers\CorpsController;
 use App\Http\Controllers\FormeController;
 use App\Http\Controllers\ThemeController;
+
+use App\Http\Controllers\ChiffreController;
+
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\CouleurController;
 use App\Http\Controllers\DessinController;
 use App\Http\Controllers\AnimalController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,5 +48,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Theme toggle
     Route::post('/toggle-theme', [ThemeController::class, 'toggle'])->name('theme.toggle');
 });
+
+Route::get('/chiffres', [ChiffreController::class, 'index'])->name('chiffres.index');
+Route::get('/chiffres/quiz', [ChiffreController::class, 'quiz'])->name('chiffres.quiz'); // <-- AVANT
+Route::get('/chiffres/{id}', [ChiffreController::class, 'show'])->name('chiffres.show');
 
 require __DIR__.'/auth.php';
