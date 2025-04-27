@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AlphabetSeeder::class,
             PartieCorpsSeeder::class,
+            AnimalSeeder::class,
         ]);
         $this->call([
             TransportSeeder::class,
