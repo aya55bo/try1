@@ -8,46 +8,42 @@ use App\Http\Controllers\FormeController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\TransportController;
 use App\Http\Controllers\CouleurController;
-use App\Models\Transport;
 use App\Http\Controllers\DessinController;
+use App\Http\Controllers\AnimalController;
 
-Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
-Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
-Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
-Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
-
-Route::get('/dessin', [DessinController::class, 'index'])->name('dessin.index');
-Route::post('/dessins/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
-Route::post('/dessins/partager', [DessinController::class, 'partager'])->name('dessin.partager');
-
-Route::get('/couleurs', [CouleurController::class, 'index'])->name('couleurs');
-Route::get('/transports', [TransportController::class, 'index'])->name('transports');
-
-
-
-
+// Routes de base
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Routes authentifiées
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Modules éducatifs
+    Route::get('/alphabet', [AlphabetController::class, 'index'])->name('alphabet');
+    Route::get('/corps', [CorpsController::class, 'index'])->name('corps');
+    Route::get('/formes', [FormeController::class, 'index'])->name('formes');
+    Route::get('/animals', [AnimalController::class, 'index'])->name('animals');
+    Route::get('/couleurs', [CouleurController::class, 'index'])->name('couleurs');
+    Route::get('/transports', [TransportController::class, 'index'])->name('transports');
+
+    // Dessin
+    Route::prefix('dessin')->group(function () {
+        Route::get('/', [DessinController::class, 'index'])->name('dessin.index');
+        Route::post('/sauvegarder', [DessinController::class, 'sauvegarder'])->name('dessin.sauvegarder');
+        Route::post('/partager', [DessinController::class, 'partager'])->name('dessin.partager');
+    });
+
+    // Thème
+    Route::post('/toggle-theme', [ThemeController::class, 'toggle'])->name('theme.toggle');
 });
 
 require __DIR__.'/auth.php';
-Route::get('/alphabet', [AlphabetController::class, 'index'])->name('alphabet');
-Route::get('/corps', [CorpsController::class, 'index'])->name('corps');
-
-
-Route::get('/formes', [FormeController::class, 'index'])->name('formes');
-
-
-Route::post('/toggle-theme', [ThemeController::class, 'toggle'])->name('theme.toggle');
-
-Route::get('/animals', [AnimalController::class, 'index'])->name('animals');
