@@ -14,10 +14,15 @@
         <p class="text-lg text-gray-700 mb-4">Tu es maintenant connecté(e). Choisis une catégorie pour commencer à apprendre ✨</p>
 
         <div class="grid grid-cols-2 gap-6 mt-8">
-            <a href="#" class="bg-yellow-400 hover:bg-yellow-500 text-white py-3 px-6 rounded-xl shadow-lg">Les animaux 🐶</a>
+            <a href="{{ route('animals') }}" class="bg-yellow-400 hover:bg-yellow-500 text-white py-3 px-6 rounded-xl shadow-lg">Les animaux 🐶</a>
             <a href="{{ route('alphabet') }}" class="bg-green-400 hover:bg-green-500 text-white py-3 px-6 rounded-xl shadow-lg">L'alphabet 🔤</a>
+
+            <a href="{{ route('chiffres.index') }}" class="bg-purple-400 hover:bg-purple-500 text-white py-3 px-6 rounded-xl shadow-lg">Les chiffres 🔢</a>
+            <a href="#" class="bg-red-400 hover:bg-red-500 text-white py-3 px-6 rounded-xl shadow-lg">Les couleurs 🌈</a>
+
             <a href="#" class="bg-purple-400 hover:bg-purple-500 text-white py-3 px-6 rounded-xl shadow-lg">Les chiffres 🔢</a>
             <a href="{{ route('couleurs') }}" class="bg-red-400 hover:bg-red-500 text-white py-3 px-6 rounded-xl shadow-lg">Les couleurs 🌈</a>
+
             <a href="#" class="bg-pink-400 hover:bg-pink-500 text-white py-3 px-6 rounded-xl shadow-lg">Fruits & Légumes 🍎🥦</a>
             <a href="{{ route('transports') }}" class="bg-blue-400 hover:bg-blue-500 text-white py-3 px-6 rounded-xl shadow-lg">Transports 🚗✈️</a>
             <a href="{{ route('dessin.index') }}"
