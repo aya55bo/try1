@@ -11,7 +11,7 @@
         <!-- En-tête -->
         <div class="p-4 bg-gradient-to-r from-purple-300 to-pink-300 rounded-lg shadow-lg mb-6">
             <div class="flex justify-between items-center">
-                <a href="#" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full transition-all">
+                <a href="{{ route('dashboard') }}" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full transition-all">
                     ⬅️ Retour
                 </a>
                 <h1 class="text-center font-bold text-3xl text-purple-800">
