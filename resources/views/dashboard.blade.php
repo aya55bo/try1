@@ -20,7 +20,8 @@
             <a href="{{ route('couleurs') }}" class="bg-red-400 hover:bg-red-500 text-white py-3 px-6 rounded-xl shadow-lg">Les couleurs 🌈</a>
             <a href="#" class="bg-pink-400 hover:bg-pink-500 text-white py-3 px-6 rounded-xl shadow-lg">Fruits & Légumes 🍎🥦</a>
             <a href="{{ route('transports') }}" class="bg-blue-400 hover:bg-blue-500 text-white py-3 px-6 rounded-xl shadow-lg">Transports 🚗✈️</a>
-
+            <a href="{{ route('dessin.index') }}"
+ class="bg-blue-400 hover:bg-blue-500 text-white py-3 px-6 rounded-xl shadow-lg">🖌️ Atelier de Dessin 🎨</a>
 
             <a href="{{ route('corps') }}" class="bg-pink-300 hover:bg-pink-400 text-white font-bold py-4 px-6 rounded-2xl shadow-xl text-center transition-all duration-200">
     🧍‍♂️ Les Parties du Corps
