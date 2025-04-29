@@ -15,7 +15,7 @@ class CreateDessinsTable extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('est_partage')->default(false);
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            
         });
     }
 

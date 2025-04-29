@@ -18,9 +18,7 @@
             <a href="{{ route('alphabet') }}" class="bg-green-400 hover:bg-green-500 text-white py-3 px-6 rounded-xl shadow-lg">L'alphabet 🔤</a>
 
             <a href="{{ route('chiffres.index') }}" class="bg-purple-400 hover:bg-purple-500 text-white py-3 px-6 rounded-xl shadow-lg">Les chiffres 🔢</a>
-            <a href="#" class="bg-red-400 hover:bg-red-500 text-white py-3 px-6 rounded-xl shadow-lg">Les couleurs 🌈</a>
 
-            <a href="#" class="bg-purple-400 hover:bg-purple-500 text-white py-3 px-6 rounded-xl shadow-lg">Les chiffres 🔢</a>
             <a href="{{ route('couleurs') }}" class="bg-red-400 hover:bg-red-500 text-white py-3 px-6 rounded-xl shadow-lg">Les couleurs 🌈</a>
 
             <a href="#" class="bg-pink-400 hover:bg-pink-500 text-white py-3 px-6 rounded-xl shadow-lg">Fruits & Légumes 🍎🥦</a>
