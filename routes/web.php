@@ -13,6 +13,19 @@ use App\Http\Controllers\TransportController;
 use App\Http\Controllers\CouleurController;
 use App\Http\Controllers\DessinController;
 use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\admin\CategorieController;
+use App\Http\Middleware\IsAdmin;
+
+Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
+
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminAuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/categories', [CategorieController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategorieController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategorieController::class, 'store'])->name('categories.store');
+});
 
 
 Route::get('/', function () {
@@ -52,5 +65,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/chiffres', [ChiffreController::class, 'index'])->name('chiffres.index');
 Route::get('/chiffres/quiz', [ChiffreController::class, 'quiz'])->name('chiffres.quiz'); // <-- AVANT
 Route::get('/chiffres/{id}', [ChiffreController::class, 'show'])->name('chiffres.show');
+
+
+
+
 
 require __DIR__.'/auth.php';

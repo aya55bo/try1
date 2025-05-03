@@ -113,6 +113,10 @@
             <a href="{{ route('login') }}" class="btn btn-blue">Connexion</a>
             <a href="{{ route('register') }}" class="btn btn-pink">Inscription</a>
         </div>
+        <a href="{{ route('admin.login') }}" class="btn bg-indigo-600 text-white hover:bg-indigo-700">
+    🎛️ Administration
+</a>
+
     </div>
 </div>
 
